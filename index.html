@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For Gemarose ❤️</title>
-    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -63,33 +62,25 @@
             margin-bottom: 20px; 
         }
 
-        h1 { 
-            color: #d90429; 
-            font-size: 1.5rem; 
-            margin: 0 0 10px 0; 
-        }
-        
-        .subtext {
-            color: #ff4d6d;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
+        h1 { color: #d90429; font-size: 1.8rem; margin: 0 0 10px 0; }
+        .subtext { color: #ff4d6d; font-size: 1.1rem; margin-bottom: 25px; }
 
         .button-group {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            min-height: 50px;
+            align-items: center;
+            gap: 20px;
+            min-height: 60px;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 1rem;
+            padding: 12px 28px;
+            font-size: 1.1rem;
             cursor: pointer;
             border: none;
             border-radius: 50px;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
         }
 
         #yesBtn {
@@ -102,13 +93,9 @@
             background-color: #ffffff;
             color: var(--hot-pink);
             border: 2px solid var(--hot-pink);
-            position: relative;
-        }
-
-        @media (min-width: 600px) {
-            h1 { font-size: 2rem; }
-            .main-gif { width: 180px; }
-            button { padding: 15px 35px; font-size: 1.1rem; }
+            /* This ensures it doesn't vanish, but moves */
+            position: relative; 
+            z-index: 15;
         }
 
         /* Pop-up Modal */
@@ -131,8 +118,8 @@
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-        .modal h2 { color: var(--hot-pink); font-size: 1.5rem; margin-bottom: 10px; }
-        .modal p { color: #555; margin-bottom: 20px; }
+        .modal h2 { color: var(--hot-pink); margin-bottom: 10px; }
+        .modal p { color: #555; margin-bottom: 20px; line-height: 1.5; }
         .modal img { width: 140px; border-radius: 15px; }
     </style>
 </head>
@@ -141,19 +128,17 @@
     <div class="heart-bg" id="heartBg"></div>
 
     <div class="container">
-        <!-- Cute Teddy Bear GIF -->
         <img class="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="cute bear">
         <h1>Hi Gemarose! ❤️</h1>
         <p class="subtext">Will you be my Valentine?</p>
         
         <div class="button-group">
             <button id="yesBtn" onclick="showSurprise()">YES!</button>
-            <!-- Runaway logic for both mouse and touch -->
-            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+            <!-- moveButton triggers on hover (desktop) and touch (mobile) -->
+            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()" onclick="moveButton()">No</button>
         </div>
     </div>
 
-    <!-- The Success Pop-up -->
     <div id="overlay">
         <div class="modal">
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmc4dzJ4ZmxueG95ZXV6Z2p6eHh6eHh6eHh6eHh6eHh6eHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lTfuxV6M9rY79e/giphy.gif" alt="celebration">
@@ -164,7 +149,7 @@
     </div>
 
     <script>
-        // Floating Hearts Background
+        // Floating Hearts
         const heartBg = document.getElementById('heartBg');
         function createHeart() {
             const heart = document.createElement('div');
@@ -177,18 +162,20 @@
         }
         setInterval(createHeart, 500);
 
-        // Runaway Button Logic
+        // THE FIXED MOVE LOGIC
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
-            const padding = 20; 
             
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            // Calculate random position within the visible screen
+            // We subtract button size so it doesn't go off-edge
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
 
-            noBtn.style.position = 'fixed'; 
+            // Apply the new position
+            noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
         }

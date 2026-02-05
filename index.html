@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- This tag is the most important for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For My Valentine ❤️</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -17,14 +18,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(135deg, #ffc8dd 0%, #ffafcc 100%);
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            overflow: hidden;
-            position: relative;
+            overflow: hidden; /* Prevents scrolling when the button jumps */
+            touch-action: manipulation; /* Prevents double-tap zoom delay */
         }
 
-        /* Floating Heart Background */
+        /* Moving Heart Background */
         .heart-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -42,106 +43,118 @@
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Main Center Card */
+        /* Responsive Container */
         .container {
             background: rgba(255, 255, 255, 0.85);
-            padding: 40px;
+            padding: 30px;
             border-radius: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
             backdrop-filter: blur(10px);
             z-index: 10;
             border: 4px solid white;
+            width: 85%; /* Fluid width for mobile */
             max-width: 400px;
-            width: 90%;
         }
 
-        .main-gif { width: 180px; border-radius: 20px; margin-bottom: 20px; }
-        h1 { color: #d90429; font-size: 1.8rem; margin: 0; margin-bottom: 20px; }
+        .main-gif { 
+            width: 150px; /* Smaller for mobile by default */
+            border-radius: 20px; 
+            margin-bottom: 20px; 
+        }
+
+        h1 { 
+            color: #d90429; 
+            font-size: 1.5rem; /* Scaled down for mobile */
+            margin: 0 0 20px 0; 
+        }
 
         .button-group {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 20px;
-            min-height: 60px; /* Space for the runaway button */
+            gap: 15px;
+            min-height: 50px;
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             cursor: pointer;
             border: none;
             border-radius: 50px;
-            transition: transform 0.2s, background-color 0.3s;
             font-weight: bold;
+            transition: transform 0.2s;
         }
 
         #yesBtn {
             background-color: var(--hot-pink);
             color: white;
             box-shadow: 0 5px 15px rgba(255, 46, 99, 0.4);
-            z-index: 11; /* Always stays on top */
         }
 
         #noBtn {
             background-color: #ffffff;
             color: var(--hot-pink);
             border: 2px solid var(--hot-pink);
-            transition: 0.1s ease; /* Faster move */
+            position: relative;
         }
 
-        /* The Custom Pop-up Modal */
+        /* --- MEDIA QUERIES for larger screens --- */
+        @media (min-width: 600px) {
+            h1 { font-size: 2rem; }
+            .main-gif { width: 180px; }
+            button { padding: 15px 35px; font-size: 1.1rem; }
+        }
+
+        /* Pop-up Modal Styling */
         #overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             z-index: 100;
             justify-content: center;
             align-items: center;
         }
         .modal {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 30px;
             text-align: center;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 320px;
+            width: 80%;
+            max-width: 300px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-        .modal h2 { color: var(--hot-pink); margin: 15px 0; }
-        .modal img { width: 150px; border-radius: 15px; }
+        .modal h2 { color: var(--hot-pink); font-size: 1.5rem; }
+        .modal img { width: 130px; border-radius: 15px; }
     </style>
 </head>
 <body>
 
     <div class="heart-bg" id="heartBg"></div>
 
-    <div class="container">
+    <div class="container" id="mainCard">
         <img class="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="cute bear">
         <h1>Will you be my Valentine? 🌹</h1>
         
         <div class="button-group">
-            <!-- Clicking Yes triggers the confetti and pop-up -->
             <button id="yesBtn" onclick="showSurprise()">YES!</button>
-            
-            <!-- Hovering or Clicking No makes it run away -->
-            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
+            <!-- touchstart is key for mobile responsiveness -->
+            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
         </div>
     </div>
 
-    <!-- The Success Pop-up -->
     <div id="overlay">
         <div class="modal">
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmc4dzJ4ZmxueG95ZXV6Z2p6eHh6eHh6eHh6eHh6eHh6eHh6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/l41lTfuxV6M9rY79e/giphy.gif" alt="celebration">
             <h2>Yay! See you soon! ❤️</h2>
-            <button onclick="closeModal()" style="margin-top:15px; background:#eee; font-size: 14px; padding: 10px 20px;">Close</button>
+            <button onclick="closeModal()" style="margin-top:15px; background:#f0f0f0; border:none; padding:10px 20px; border-radius:20px;">Close</button>
         </div>
     </div>
 
     <script>
-        // Floating Hearts
+        // Floating Hearts Background
         const heartBg = document.getElementById('heartBg');
         function createHeart() {
             const heart = document.createElement('div');
@@ -150,29 +163,27 @@
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
             heartBg.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 6000);
+            setTimeout(() => heart.remove(), 6000);
         }
-        setInterval(createHeart, 400);
+        setInterval(createHeart, 500);
 
-        // THE RUNAWAY BUTTON LOGIC
+        // Runaway Button Logic
         function moveButton() {
-            const btn = document.getElementById('noBtn');
+            const noBtn = document.getElementById('noBtn');
+            const padding = 20; // Keep it away from the extreme edges
             
-            // Get screen dimensions minus button size so it doesn't go off-screen
-            const maxWidth = window.innerWidth - btn.offsetWidth;
-            const maxHeight = window.innerHeight - btn.offsetHeight;
+            // Calculate boundaries so it stays visible on the screen
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-            // Generate random coordinates
-            const randomX = Math.floor(Math.random() * maxWidth);
-            const randomY = Math.floor(Math.random() * maxHeight);
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-            // Change position to absolute and move it
-            btn.style.position = 'absolute';
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
+            noBtn.style.position = 'fixed'; // Fixed works better for "jumping" around the whole screen
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
         }
 
-        // SHOW THE SURPRISE
         function showSurprise() {
             document.getElementById('overlay').style.display = 'flex';
             confetti({

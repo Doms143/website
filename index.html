@@ -123,6 +123,9 @@
         .modal h2 { color: var(--hot-pink); margin-bottom: 10px; }
         .modal p { color: #555; margin-bottom: 20px; line-height: 1.5; }
         .modal img { width: 180px; border-radius: 15px; }
+        
+        /* Backup Heart if GIF fails */
+        .backup-heart { font-size: 80px; display: none; }
     </style>
 </head>
 <body>
@@ -144,8 +147,11 @@
     <!-- The Success Pop-up -->
     <div id="overlay">
         <div class="modal">
-            <!-- NEW CUTE MODAL GIF (Bubu Dudu Hug) -->
-            <img src="https://media.tenor.com/0p_S1zS_XLEAAAAi/bubu-dudu-bubu.gif" alt="celebration">
+            <!-- NEW RELIABLE GIF LINK -->
+            <div id="gifContainer">
+                <img id="modalGif" src="https://media.tenor.com/y26S_91_S_XLEAAAAi/milk-and-mocha.gif" alt="celebration" onerror="showBackup()">
+                <div id="backupHeart" class="backup-heart">❤️</div>
+            </div>
             <h2>Yay! Gemarose! ❤️</h2>
             <p>I'm so happy! See you soon!<br><strong>- Dominic</strong></p>
             <button onclick="closeModal()" style="background:#f0f0f0; border:none; padding:10px 20px; border-radius:20px; cursor:pointer;">Close</button>
@@ -185,6 +191,12 @@
 
         function closeModal() {
             document.getElementById('overlay').style.display = 'none';
+        }
+
+        // If the GIF fails to load, show a heart instead
+        function showBackup() {
+            document.getElementById('modalGif').style.display = 'none';
+            document.getElementById('backupHeart').style.display = 'block';
         }
     </script>
 </body>

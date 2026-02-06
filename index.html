@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For Gemarose ❤️</title>
+    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -122,10 +123,19 @@
         @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
         .modal h2 { color: var(--hot-pink); margin-bottom: 10px; }
         .modal p { color: #555; margin-bottom: 20px; line-height: 1.5; }
-        .modal img { width: 180px; border-radius: 15px; }
         
-        /* Backup Heart if GIF fails */
-        .backup-heart { font-size: 80px; display: none; }
+        /* GIF Styling */
+        .modal-gif {
+            width: 180px;
+            border-radius: 15px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .fallback-heart {
+            font-size: 80px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -133,7 +143,7 @@
     <div class="heart-bg" id="heartBg"></div>
 
     <div class="container">
-        <!-- YOUR ORIGINAL FIRST GIF -->
+        <!-- Main GIF (The one you said works) -->
         <img class="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="cute bear">
         <h1>Hi Gemarose! ❤️</h1>
         <p class="subtext">Will you be my Valentine?</p>
@@ -147,10 +157,10 @@
     <!-- The Success Pop-up -->
     <div id="overlay">
         <div class="modal">
-            <!-- NEW RELIABLE GIF LINK -->
-            <div id="gifContainer">
-                <img id="modalGif" src="https://media.tenor.com/y26S_91_S_XLEAAAAi/milk-and-mocha.gif" alt="celebration" onerror="showBackup()">
-                <div id="backupHeart" class="backup-heart">❤️</div>
+            <!-- NEW STABLE GIF LINK -->
+            <div id="gifWrapper">
+                <img class="modal-gif" id="celebrationGif" src="https://media.tenor.com/gU_pSp96pYgAAAAi/bear-kiss-bear-love.gif" alt="celebration" onerror="handleGifError()">
+                <div id="heartFallback" class="fallback-heart">❤️</div>
             </div>
             <h2>Yay! Gemarose! ❤️</h2>
             <p>I'm so happy! See you soon!<br><strong>- Dominic</strong></p>
@@ -159,7 +169,7 @@
     </div>
 
     <script>
-        // Floating Hearts
+        // Floating Hearts Background
         const heartBg = document.getElementById('heartBg');
         function createHeart() {
             const heart = document.createElement('div');
@@ -175,13 +185,16 @@
         // Runaway Button Logic (Stays near middle)
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
+            // Moves the button randomly within a 200px range of the center
             const randomX = Math.floor(Math.random() * 200) - 100; 
             const randomY = Math.floor(Math.random() * 150) - 75;  
             noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
         }
 
+        // Show the Surprise
         function showSurprise() {
             document.getElementById('overlay').style.display = 'flex';
+            // Trigger Confetti
             confetti({
                 particleCount: 150,
                 spread: 70,
@@ -193,10 +206,10 @@
             document.getElementById('overlay').style.display = 'none';
         }
 
-        // If the GIF fails to load, show a heart instead
-        function showBackup() {
-            document.getElementById('modalGif').style.display = 'none';
-            document.getElementById('backupHeart').style.display = 'block';
+        // If the GIF fails to load, show a big heart instead
+        function handleGifError() {
+            document.getElementById('celebrationGif').style.display = 'none';
+            document.getElementById('heartFallback').style.display = 'block';
         }
     </script>
 </body>

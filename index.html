@@ -84,6 +84,7 @@
             border-radius: 50px;
             font-weight: bold;
             transition: all 0.2s ease;
+            min-width: 120px; /* Added to keep button size consistent when text changes */
         }
 
         #yesBtn {
@@ -124,7 +125,6 @@
         .modal h2 { color: var(--hot-pink); margin-bottom: 10px; }
         .modal p { color: #555; margin-bottom: 20px; line-height: 1.5; }
         
-        /* GIF Styling */
         .modal-gif {
             width: 100%;
             max-width: 200px;
@@ -144,22 +144,19 @@
     <div class="heart-bg" id="heartBg"></div>
 
     <div class="container">
-        <!-- Main GIF -->
         <img class="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="cute bear">
         <h1>Hi Gemarose! ❤️</h1>
         <p class="subtext">Will you be my Valentine?</p>
         
         <div class="button-group">
-            <button id="yesBtn" onclick="showSurprise()">YES!</button>
+            <button id="yesBtn" onclick="handleYes()">YES!</button>
             <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
         </div>
     </div>
 
-    <!-- The Success Pop-up -->
     <div id="overlay">
         <div class="modal">
             <div id="gifWrapper">
-                <!-- NEW STABLE GIF LINK -->
                 <img class="modal-gif" id="celebrationGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ29ueXpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/MDJ9IbM3vUzUtHyBnK/giphy.gif" alt="celebration" onerror="handleGifError()">
                 <div id="heartFallback" class="fallback-heart">❤️</div>
             </div>
@@ -170,6 +167,8 @@
     </div>
 
     <script>
+        let yesClickCount = 0;
+
         // Floating Hearts Background
         const heartBg = document.getElementById('heartBg');
         function createHeart() {
@@ -183,15 +182,35 @@
         }
         setInterval(createHeart, 500);
 
-        // Runaway Button Logic
+        // Runaway Button Logic with Random Text
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
+            const noTexts = ["bleee", ":P", "no way!", "Hmmp!"];
+            
+            // Change text randomly
+            const randomText = noTexts[Math.floor(Math.random() * noTexts.length)];
+            noBtn.innerText = randomText;
+
+            // Move button
             const randomX = Math.floor(Math.random() * 200) - 100; 
             const randomY = Math.floor(Math.random() * 150) - 75;  
             noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
         }
 
-        // Show the Surprise
+        // Handle Yes Button Logic
+        function handleYes() {
+            const yesBtn = document.getElementById('yesBtn');
+            
+            if (yesClickCount === 0) {
+                // First click: Change text
+                yesBtn.innerText = "Promise???";
+                yesClickCount++;
+            } else {
+                // Second click: Show surprise
+                showSurprise();
+            }
+        }
+
         function showSurprise() {
             document.getElementById('overlay').style.display = 'flex';
             confetti({
@@ -203,9 +222,11 @@
 
         function closeModal() {
             document.getElementById('overlay').style.display = 'none';
+            // Optional: Reset YES button text after closing
+            document.getElementById('yesBtn').innerText = "YES!";
+            yesClickCount = 0;
         }
 
-        // Fallback if GIF fails
         function handleGifError() {
             document.getElementById('celebrationGif').style.display = 'none';
             document.getElementById('heartFallback').style.display = 'block';
@@ -213,4 +234,3 @@
     </script>
 </body>
 </html>
-

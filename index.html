@@ -84,7 +84,7 @@
             border-radius: 50px;
             font-weight: bold;
             transition: all 0.2s ease;
-            min-width: 120px; /* Added to keep button size consistent when text changes */
+            min-width: 120px;
         }
 
         #yesBtn {
@@ -125,17 +125,14 @@
         .modal h2 { color: var(--hot-pink); margin-bottom: 10px; }
         .modal p { color: #555; margin-bottom: 20px; line-height: 1.5; }
         
-        .modal-gif {
+        /* Photo Styling */
+        .modal-photo {
             width: 100%;
-            max-width: 200px;
-            border-radius: 15px;
+            max-width: 220px;
+            border-radius: 20px;
             display: block;
             margin: 0 auto 15px auto;
-        }
-
-        .fallback-heart {
-            font-size: 80px;
-            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -156,10 +153,9 @@
 
     <div id="overlay">
         <div class="modal">
-            <div id="gifWrapper">
-                <img class="modal-gif" id="celebrationGif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ29ueXpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/MDJ9IbM3vUzUtHyBnK/giphy.gif" alt="celebration" onerror="handleGifError()">
-                <div id="heartFallback" class="fallback-heart">❤️</div>
-            </div>
+            <!-- YOUR PHOTO IS HERE -->
+            <img class="modal-photo" src="me.jpg" alt="Dominic">
+            
             <h2>Yay! Gemarose! ❤️</h2>
             <p>I'm so happy! See you soon babyyy!<br><strong>- Dominic</strong></p>
             <button onclick="closeModal()" style="background:#f0f0f0; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight: bold;">Close</button>
@@ -187,11 +183,9 @@
             const noBtn = document.getElementById('noBtn');
             const noTexts = ["bleee", ":P", "no way!", "Hmmp!"];
             
-            // Change text randomly
             const randomText = noTexts[Math.floor(Math.random() * noTexts.length)];
             noBtn.innerText = randomText;
 
-            // Move button
             const randomX = Math.floor(Math.random() * 200) - 100; 
             const randomY = Math.floor(Math.random() * 150) - 75;  
             noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
@@ -202,11 +196,9 @@
             const yesBtn = document.getElementById('yesBtn');
             
             if (yesClickCount === 0) {
-                // First click: Change text
                 yesBtn.innerText = "Promise???";
                 yesClickCount++;
             } else {
-                // Second click: Show surprise
                 showSurprise();
             }
         }
@@ -222,14 +214,8 @@
 
         function closeModal() {
             document.getElementById('overlay').style.display = 'none';
-            // Optional: Reset YES button text after closing
             document.getElementById('yesBtn').innerText = "YES!";
             yesClickCount = 0;
-        }
-
-        function handleGifError() {
-            document.getElementById('celebrationGif').style.display = 'none';
-            document.getElementById('heartFallback').style.display = 'block';
         }
     </script>
 </body>

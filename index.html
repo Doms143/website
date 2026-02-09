@@ -10,6 +10,8 @@
         :root {
             --pink: #ffafcc;
             --hot-pink: #ff2e63;
+            --envelope-color: #ff8fab;
+            --envelope-dark: #fb6f92;
         }
 
         body {
@@ -43,8 +45,90 @@
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Main Card */
+        /* --- LANDING PAGE ENVELOPE --- */
+        #landing-page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ffc8dd 0%, #ffafcc 100%);
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .envelope-wrapper {
+            cursor: pointer;
+            position: relative;
+            width: 250px;
+            height: 180px;
+            background-color: var(--envelope-color);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .envelope-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-top: 100px solid var(--envelope-dark);
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            transform-origin: top;
+            transition: transform 0.5s ease;
+        }
+
+        .envelope-wrapper.open::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-front {
+            position: absolute;
+            width: 0; height: 0;
+            top: 0; z-index: 3;
+            border-bottom: 90px solid var(--envelope-color);
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            bottom: 0;
+        }
+
+        .envelope-sides {
+            position: absolute;
+            width: 0; height: 0;
+            top: 0; z-index: 2;
+            border-top: 90px solid transparent;
+            border-bottom: 90px solid transparent;
+            border-left: 125px solid var(--envelope-dark);
+        }
+
+        .heart-seal {
+            position: absolute;
+            top: 40%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 4;
+            font-size: 40px;
+            transition: opacity 0.3s;
+        }
+
+        .click-text {
+            margin-top: 30px;
+            color: var(--hot-pink);
+            font-weight: bold;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- MAIN CONTENT (Hidden initially) --- */
         .container {
+            display: none; /* Hidden until envelope is clicked */
             background: rgba(255, 255, 255, 0.85);
             padding: 30px;
             border-radius: 30px;
@@ -56,6 +140,8 @@
             width: 85%;
             max-width: 400px;
             position: relative;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
 
         .main-gif { 
@@ -84,7 +170,7 @@
             border-radius: 50px;
             font-weight: bold;
             transition: all 0.2s ease;
-            min-width: 140px; /* Slightly wider to fit "Promise???" */
+            min-width: 140px;
         }
 
         #yesBtn {
@@ -125,7 +211,6 @@
         .modal h2 { color: var(--hot-pink); margin-bottom: 10px; }
         .modal p { color: #555; margin-bottom: 20px; line-height: 1.5; }
         
-        /* Photo Styling */
         .modal-photo {
             width: 100%;
             max-width: 220px;
@@ -140,7 +225,18 @@
 
     <div class="heart-bg" id="heartBg"></div>
 
-    <div class="container">
+    <!-- LANDING PAGE -->
+    <div id="landing-page">
+        <div class="envelope-wrapper" onclick="openEnvelope(this)">
+            <div class="envelope-sides"></div>
+            <div class="envelope-front"></div>
+            <div class="heart-seal">❤️</div>
+        </div>
+        <p class="click-text">You have a message, Gemarose! Click to open</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" id="main-container">
         <img class="main-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpobjZid294M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6Y3p6M3p6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif" alt="cute bear">
         <h1>Hi Gemarose! ❤️</h1>
         <p class="subtext">Will you be my Valentine?</p>
@@ -153,9 +249,7 @@
 
     <div id="overlay">
         <div class="modal">
-            <!-- YOUR PHOTO IS HERE -->
             <img class="modal-photo" src="Me.jpg" alt="Dominic">
-            
             <h2>Yay I Love you BABEEE! ❤️</h2>
             <p>I'm so happy! See you soon babyyy!<br><strong>- Dominic Pogi ;P </strong></p>
             <button onclick="closeModal()" style="background:#f0f0f0; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight: bold;">Close</button>
@@ -164,6 +258,22 @@
 
     <script>
         let yesClickCount = 0;
+
+        // Function to open envelope
+        function openEnvelope(element) {
+            element.classList.add('open');
+            document.querySelector('.heart-seal').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('landing-page').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('landing-page').style.visibility = 'hidden';
+                    const main = document.getElementById('main-container');
+                    main.style.display = 'block';
+                    setTimeout(() => { main.style.opacity = '1'; }, 50);
+                }, 800);
+            }, 500);
+        }
 
         // Floating Hearts Background
         const heartBg = document.getElementById('heartBg');
@@ -178,11 +288,10 @@
         }
         setInterval(createHeart, 500);
 
-        // Runaway Button Logic with Random Text
+        // Runaway Button Logic
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
             const noTexts = ["bleee", ":P", "no way!", "Hmmp!"];
-            
             const randomText = noTexts[Math.floor(Math.random() * noTexts.length)];
             noBtn.innerText = randomText;
 
@@ -194,7 +303,6 @@
         // Handle Yes Button Logic
         function handleYes() {
             const yesBtn = document.getElementById('yesBtn');
-            
             if (yesClickCount === 0) {
                 yesBtn.innerText = "Promise???";
                 yesClickCount++;
@@ -223,5 +331,3 @@
     </script>
 </body>
 </html>
-
-

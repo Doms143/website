@@ -84,7 +84,7 @@
             border-radius: 50px;
             font-weight: bold;
             transition: all 0.2s ease;
-            min-width: 120px;
+            min-width: 140px; /* Slightly wider to fit "Promise???" */
         }
 
         #yesBtn {
@@ -198,6 +198,9 @@
             if (yesClickCount === 0) {
                 yesBtn.innerText = "Promise???";
                 yesClickCount++;
+            } else if (yesClickCount === 1) {
+                yesBtn.innerText = "SURE???";
+                yesClickCount++;
             } else {
                 showSurprise();
             }
@@ -220,4 +223,3 @@
     </script>
 </body>
 </html>
-
